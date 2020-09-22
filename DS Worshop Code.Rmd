@@ -1,0 +1,358 @@
+---
+title: "Data Science in Statistical Methods using R"
+author: "Md Sayeef Alam"
+date: "21/09/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Day 1
+
+## Session 1: Application of Regression and Multiple Regression in Data Science
+
+### Dr. R. K. Jana, IIM Raipur
+
+Simple addition in R
+
+```{r c001}
+1+1
+```
+
+Some packages to be installed
+
+```{r c002, results='hide', error = F, message=F, warning=F}
+install.packages("matlib", dependencies = T,repos = "http://cran.us.r-project.org")
+install.packages("corpcor", dependencies = T,repos = "http://cran.us.r-project.org") 
+install.packages("GPArotation", dependencies = T,repos = "http://cran.us.r-project.org")
+install.packages("psych", dependencies = T,repos = "http://cran.us.r-project.org")
+install.packages("FactoMineR", dependencies = T,repos = "http://cran.us.r-project.org")
+install.packages("tseries", dependencies = T,repos = "http://cran.us.r-project.org")
+install.packages("corrplot", dependencies = T,repos = "http://cran.us.r-project.org")
+install.packages("tseries", dependencies = T,repos = "http://cran.us.r-project.org")
+install.packages("ggpubr", dependencies = T,repos = "http://cran.us.r-project.org")
+install.packages("tidyverse", dependencies = T,repos = "http://cran.us.r-project.org")
+install.packages("Hmisc", dependencies = T,repos = "http://cran.us.r-project.org")
+install.packages("dplyr", dependencies = T,repos = "http://cran.us.r-project.org")
+install.packages("ggplot2", dependencies = T,repos = "http://cran.us.r-project.org")
+install.packages("lattice", dependencies = T,repos = "http://cran.us.r-project.org") 
+install.packages("grid", dependencies = T,repos = "http://cran.us.r-project.org")
+install.packages("DMwR", dependencies = T,repos = "http://cran.us.r-project.org")
+install.packages("stats", dependencies = T,repos = "http://cran.us.r-project.org")
+install.packages("nortest", dependencies = T,repos = "http://cran.us.r-project.org")
+```
+
+Adding the libraries corresponding to packages.
+
+```{r c003,results='hide', error = F, message=F}
+library(dplyr)
+library(tseries)
+library(matlib)
+library(corpcor) 
+library(GPArotation) 
+library(psych)
+library(FactoMineR)
+library(corrplot)
+library(ggpubr)
+library(lattice)
+library(grid)
+library(nortest)
+library(stats)
+library(DMwR)
+library(ggplot2)
+```
+
+Reading xls and xlsx files
+
+```{r c004, eval = F}
+install.packages("gdata", dep = T,repos = "http://cran.us.r-project.org")
+library(gdata)
+xls.data = read.xls("file.xls")
+```
+
+You need to specify the sheetIndex (sheet number) 
+
+```{r c005, eval = F}
+install.packages("xlsx", dep = T,repos = "http://cran.us.r-project.org") 
+library(xlsx)
+xlsx.data = read.xlsx("file.xlsx", sheetIndex = 1)
+```
+
+## Linear Regression
+Simple Linear Regression
+
+1 dependent (y)
+
+1 independent (x)
+
+Assumptions
+
+1. Relationships between the above two must be linear
+
+2. Residuals should be normally distributed
+
+3. Residuals should be homoscedastic
+
+4. Residuals should be independent
+
+Homoscedasticity means same variance, error term (i.e. distance of the points from the fitted line) should be same across all values of the independent variables. 
+
+Heteroscedasticity is when the error varies with the values of the independent variables.
+
+Several measures are there to check for homoscedasticity
+
+```{r c006}
+library(datasets)
+data(cars)
+```
+
+Lets check the variables inside the dataset
+
+```{r c007}
+names(cars)
+head(cars)
+```
+
+Lets plot some parameters specifically speed vs distance
+
+```{r c008}
+plot(cars$speed, cars$dist)
+plot(cars$speed, cars$dist, xlab = "Car Speed at Stopping (in mph)", 
+     ylab = "Stopping Distance (in feet)", main = "The Effect of Car Speed on Stopping Distance")
+```
+
+Fitting a smooth line
+
+```{r c009}
+scatter.smooth(x=cars$speed, y=cars$dist, main="Dist ~ Speed")
+```
+
+Density plots for speed and distance
+
+```{r c010}
+library(e1071)
+par(mfrow=c(1, 2))
+
+plot(density(cars$speed), main="Density Plot: Speed", ylab="Frequency", sub=paste("Skewness:", round(e1071::skewness(cars$speed), 2)))  
+polygon(density(cars$speed), col="red")
+
+plot(density(cars$dist), main="Density Plot: Distance", ylab="Frequency", sub=paste("Skewness:", round(e1071::skewness(cars$dist), 2)))
+```
+
+Linear regression model fitting
+
+```{r c011}
+carmod <- lm(dist ~ speed, data = cars)
+summary(carmod)
+```
+
+95% CI
+
+```{r c012}
+confint(carmod, level = 0.95)
+```
+
+Normality of residuals check
+
+```{r c013}
+res = carmod$residuals
+hist(res)
+```
+
+### Interpretation
+The coefficients in linear regression model states that with a unit change in x how much change is expected in y.
+
+# Session 2: Data Science & Sample Survey
+
+## Prof. G. N. Singh, IIT (ISM) Dhanbad
+
+Word Statistics
+
+In a literal sense 
+
+Plural sense some sort of data numerical figures in our day to day arising, runs and all figures are called statistics
+
+In singular collection of methods and principles in a book, 
+
+Procedure to collection, analyse and interpret the data is called statistics
+
+Statistics never claims 100% accuracy
+
+Statistics is the science of decision making. As no decision is free from error.
+
+Hope that PPTs will be provided soon.
+
+# Day 2
+
+## Session 3: Introduction to R
+
+### Prof. G. N. Singh, IIT (ISM) Dhanbad
+
+Theory and PPT will be available.
+
+## Session 4: Introduction to R
+
+### Dr. Anup Kumar Sharma, NIT Raipur
+
+Theory and PPT will be available.
+
+## Session 5: Graphical representation and normality testing in R
+
+### Dr. Dhaval Maheta, 
+
+```{r c014}
+mtcars
+attach(mtcars)
+```
+
+Find the mean for all columns
+
+the number in between is the parameter denoting the 1 = row and 2 = column. row mean is useless so we are looking at column mean
+
+```{r c015}
+apply(mtcars,2,mean)
+```
+
+Now similarly for median and mode
+
+```{r c016}
+apply(mtcars,2,median)
+apply(mtcars,2,mode)
+```
+
+aggregate function helps to calculate the required function (mean/median/mode/sd) for each category of independent variable
+
+```{r c017}
+aggregate(mpg~am,FUN = mean)
+aggregate(mpg~am,FUN = median)
+aggregate(mpg~am,FUN = mode)
+aggregate(mpg~am,FUN = sd)
+```
+
+Find 3 way table to summary statistics and describeBy (available in psych library)
+
+```{r c018}
+aggregate(mpg~am+vs,FUN = mean)
+summary(mtcars)
+describeBy(mpg,am)
+```
+
+best descriptive summarizer called the stargazer, the flip = T command helps to transpose the rows and columns
+
+```{r c019, error = F, message=F, warning=F}
+install.packages("stargazer", dependencies = T,repos = "http://cran.us.r-project.org")
+library(stargazer)
+
+stargazer(mtcars,type = "text", title = "Descriptive Stats", digits = 1)
+stargazer(mtcars,type = "text", title = "Descriptive Stats", digits = 1, flip = T)
+```
+
+Try the following codes to obtain data like SPSS
+
+```{r c020, error = F, message=F, warning=F}
+install.packages("summarytools", dependencies = T,repos = "http://cran.us.r-project.org")
+install.packages("ellipsis", dependencies = T,repos = "http://cran.us.r-project.org")
+library(summarytools)
+library(ellipsis)
+```
+
+```{r c021}
+attach(mtcars)
+summarytools::descr(mtcars)
+summarytools::freq(am)
+summarytools::ctable(am,vs)
+summarytools::dfSummary(mtcars)
+```
+
+Graphical representation of data
+
+Using a new data set called "Orange"
+
+```{r c022}
+Orange
+attach(Orange)
+```
+
+Density plot of circumference
+
+```{r c023}
+densityplot(~circumference)
+```
+
+Converting into categorical/factor variable
+
+```{r c024}
+tree.f = factor(Tree, levels = c(1,2,3,4,5), labels = c("tree1","tree2","tree3","tree4","tree5"))
+```
+
+Boxplot of age of trees
+
+```{r c025}
+bwplot(~age|tree.f)
+```
+
+Dot plot
+
+```{r c026}
+dotplot(age~circumference|tree.f)
+```
+
+Level plot
+
+```{r c027}
+levelplot(tree.f~circumference*age)
+```
+
+```{r c028, error = F, message=F, warning=F}
+install.packages("DataExplorer", dependencies = T,repos = "http://cran.us.r-project.org")
+library(DataExplorer)
+
+plot_histogram(mtcars)
+```
+
+Not even interested to write a single line of command, this is very sexy and appealing for data cleaning
+
+```{r c029, error = F, message=F, warning=F}
+install.packages("esquisse", dependencies = T,repos = "http://cran.us.r-project.org")
+library(esquisse)
+
+esquisse::esquisser(mtcars)
+```
+
+Even new packages click and play, contingency tables, summary stats
+
+```{r c030, error = F, message=F, warning=F}
+install.packages("Rcmdr", dependencies = T,repos = "http://cran.us.r-project.org")
+library(Rcmdr)
+```
+
+Lets use our own dataset Employee dataset but for now use mtcars
+
+```{r c031}
+mtcars
+attach(mtcars)
+```
+
+Normality Checks using graphics but graphics is not 100% so we use test for rejection of h0: normal distribution and h1: not normal ; hence if p value < 0.05 then the data is not normal
+
+```{r c032}
+qqnorm(mpg)
+qqline(mpg)
+shapiro.test(mpg)
+```
+
+tm, quanteda: for unstructured data
+
+tseries: for timeseries
+
+animate: can be used to animate any plot type, written by Yihui Xie
+
+gganimate: used to specifically animate ggplot graphics, written by Thomas Lin Pedersen
+
+plotly: an interactive plotting library which has animation features
+
+googlevis: has a flash based motion chart option
+
+plspm for SEM
