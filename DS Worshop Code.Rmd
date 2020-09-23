@@ -42,6 +42,7 @@ install.packages("grid", dependencies = T,repos = "http://cran.us.r-project.org"
 install.packages("DMwR", dependencies = T,repos = "http://cran.us.r-project.org")
 install.packages("stats", dependencies = T,repos = "http://cran.us.r-project.org")
 install.packages("nortest", dependencies = T,repos = "http://cran.us.r-project.org")
+install.packages("MASS", dependencies = T,repos = "http://cran.us.r-project.org")
 ```
 
 Adding the libraries corresponding to packages.
@@ -62,6 +63,7 @@ library(nortest)
 library(stats)
 library(DMwR)
 library(ggplot2)
+library(MASS)
 ```
 
 Reading xls and xlsx files
@@ -186,9 +188,9 @@ Hope that PPTs will be provided soon.
 
 # Day 2
 
-## Session 3: Introduction to R
+## Session 3: Introduction to Statistical Methods in Data Science
 
-### Prof. G. N. Singh, IIT (ISM) Dhanbad
+### Dr. A. K. Sinha, NIT Raipur
 
 Theory and PPT will be available.
 
@@ -198,9 +200,15 @@ Theory and PPT will be available.
 
 Theory and PPT will be available.
 
-## Session 5: Graphical representation and normality testing in R
+## Session 5: Application of Data Science in Sample Survey
 
-### Dr. Dhaval Maheta, 
+### Prof. G. N. Singh, IIT (ISM) Dhanbad
+
+Theory and PPT will be available.
+
+## Session 6: Graphical representation and normality testing in R
+
+### Dr. Dhaval Maheta, VNSGU Surat
 
 ```{r c014}
 mtcars
@@ -323,7 +331,7 @@ esquisse::esquisser(mtcars)
 
 Even new packages click and play, contingency tables, summary stats
 
-```{r c030, error = F, message=F, warning=F}
+```{r c030, results = 'hide', error = F, message=F, warning=F}
 install.packages("Rcmdr", dependencies = T,repos = "http://cran.us.r-project.org")
 library(Rcmdr)
 ```
@@ -356,3 +364,266 @@ plotly: an interactive plotting library which has animation features
 googlevis: has a flash based motion chart option
 
 plspm for SEM
+
+# Day 3
+
+## Session 7: Regression and Multiple Regression in R
+
+### Dr. R. K. Jana, IIM Raipur
+
+Before beginning with regression simple visualization is necessary to see association of variables
+
+Install the package "MASS" for dataset mtcars
+
+Looking at the dataset 
+
+head() : function to display first 6 rows
+
+tail() : function to display last 6 rows
+
+names() : function to display names of all the columns
+
+attach() : function to attach the dataset helping us to not rewrite when accessing its columns(variables)
+
+```{r c033}
+data(mtcars)
+head(mtcars)
+names(mtcars)
+attach(mtcars)
+```
+
+Pairwise plotting of the variables of the dataset
+
+```{r c034}
+plot(mpg, cyl)
+plot(mpg, disp)
+plot(mpg, hp)
+plot(mpg, drat)
+plot(mpg, wt)
+plot(mpg, qsec)
+plot(mpg, vs)
+plot(mpg, am)
+plot(mpg, gear)
+plot(mpg, carb)
+```
+
+Multiple Linear Regression model fittiing
+
+```{r c035}
+model = lm(mpg~cyl+disp+hp+drat+wt+qsec+vs+am+gear+carb)
+model
+summary(model)
+```
+
+Coefficients confidence intervals
+
+```{r c036}
+confint(model, level=.95)
+```
+
+Checking normality of residuals and Residual histogram
+
+```{r c037}
+resid<- model$residuals
+hist(resid)
+qqnorm(resid)
+qqline(resid)
+```
+
+Homoscedasticity
+
+```{r c038}
+plot(model$residuals ~ disp)
+abline(0,0)
+```
+
+Residual analysis
+
+```{r c039}
+plot(model)
+```
+
+Transformation
+
+```{r c040}
+model1 <- lm(mpg ~cyl+log(disp)+log(hp)+drat+wt+qsec+vs+am+gear+carb)
+summary(model1)
+plot(model1)
+```
+
+AIC analysis on the original model and AIC analysis on the transition model
+
+```{r c041}
+stepAIC(model)
+stepAIC(model1)
+```
+
+Run a model for each using the recommended variables.
+
+```{r c042}
+model2<-lm(mpg~qsec+wt+am)
+summary(model2)
+
+model3<-lm(mpg~log(disp)+gear+carb)
+summary(model3)
+```
+
+Multi-colinearity check
+
+plot(mtcars) may not be clear from this plot so check pairwise correlations
+
+```{r c043}
+cor(qsec, wt) 
+cor(am, wt)
+```
+
+## Session 8: Logistic Regression in R
+
+### Dr. Dhaval Maheta, VNSGU Surat
+
+What decision should the manufacturer choose to make an automatic or manual car?
+
+Set the dataset mtcars
+
+Use the null/base model
+
+```{r c044}
+mtcars
+attach(mtcars)
+
+base = glm(am~1,data = mtcars,family = binomial)
+base
+
+summary(base)
+```
+
+The result of line "base" gives the intercept -0.379 which is the log of car being manual.
+
+NOTE: Which ever category is coded as 1 is considered to be as the reference category.
+
+Null deviance = 43.23
+
+Residual deviance = 43.23
+
+Let us check a model with some random varibles
+
+```{r c045}
+fit01 = glm(am~mpg+disp+hp+wt, family = binomial)
+fit01
+
+summary(fit01)
+```
+
+Use ANOVA and check for deviance if deviation is very high then they tend to have higher explanatory power. Using the variables in the next model and check for significance of varibles using pvalue. They are contributing in classification of 'am' our dependent Y variable.
+
+With each increase in 
+
+```{r c046}
+anova(fit01)
+fit02 = glm(am~mpg+hp+wt,family = binomial)
+summary(fit02)
+```
+
+Now lets drop mpg and make the third model
+
+```{r c047}
+fit03 = glm(am~hp+wt, family = binomial)
+summary(fit03)
+```
+
+(exp(coeff hp) - 1) and then multiply by hundred
+
+= (exp(0.036) - 1)*100
+
+= (1.0366 - 1)*100
+
+= 3.6%
+
+Interpretation: With every increase in hp by unit, 3.6% increase in chances of car being manual
+
+Now practice the same thing in "Rcmdr"
+
+Run library(Rcmdr)
+
+
+```{r c048}
+
+```
+
+
+
+```{r c049}
+
+```
+
+
+
+```{r c050}
+
+```
+
+
+
+```{r c051}
+
+```
+
+
+
+```{r c052}
+
+```
+
+
+
+```{r c053}
+
+```
+
+
+
+```{r c054}
+
+```
+
+
+
+```{r c055}
+
+```
+
+
+
+```{r c056}
+
+```
+
+
+
+```{r c057}
+
+```
+
+
+
+```{r c058}
+
+```
+
+
+
+```{r c059}
+
+```
+
+
+
+```{r c060}
+
+```
+
+
+
+```{r c061}
+
+```
